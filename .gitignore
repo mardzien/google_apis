@@ -2,3 +2,6 @@ venv
 .idea
 gsc/key
 gsc/authorizedcreds.dat
+gsc/Output
+trends/Input
+trends/Output
