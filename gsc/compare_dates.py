@@ -3,9 +3,9 @@ from gsc.gsc_without_filter import gsc_query
 from gsc.auth import authorize_creds
 
 
-site = "https://medjol.pl"
-date_range1 = "2020-08-01:2020-09-01"
-date_range2 = "2020-09-01:2020-10-01"
+site = "https://www.renee.pl"
+date_range1 = "2020-09-28:2020-10-04"
+date_range2 = "2020-11-02:2020-11-08"
 
 webmaster_service = authorize_creds()
 
@@ -18,8 +18,8 @@ def generate_gsc_report(webmaster_service, domain, d_range1, d_range2, file_path
     args2 = webmaster_service, domain, d_range2_splitted[0], d_range2_splitted[1]
 
     # wczytanie 2 tabel z różnymi zakresami dat
-    df1 = gsc_query(*args, rowLimit=1000)
-    df2 = gsc_query(*args2, rowLimit=1000)
+    df1 = gsc_query(*args, rowLimit=2000)
+    df2 = gsc_query(*args2, rowLimit=2000)
 
     # czyszczenie tabel z niepotrzebnych kolumn i ustawianie indeksu na query
     # df1.drop(columns='Unnamed: 0', inplace=True)
@@ -51,4 +51,4 @@ def generate_gsc_report(webmaster_service, domain, d_range1, d_range2, file_path
             to_excel(writer, sheet_name='Wypadło z TOP10')
 
 
-generate_gsc_report(webmaster_service, "https://www.renee.pl", date_range1, date_range2, "renee_report.xlsx")
+generate_gsc_report(webmaster_service, "https://medifem.pl", date_range1, date_range2, "Output/medifem_report.xlsx")

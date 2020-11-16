@@ -18,5 +18,5 @@ def get_trends_df():
         temp_df = get_trends(phrase)
         df = pd.merge(df, temp_df, on=["date", "isPartial"])
 
-    df_transposed = df.T # or df1.transpose()
+    df_transposed = df.T    # or df1.transpose()
     return df_transposed

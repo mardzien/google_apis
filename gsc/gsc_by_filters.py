@@ -4,7 +4,7 @@ from collections import defaultdict
 import datetime
 from dateutil import relativedelta
 
-from gsc.auth import authorize_creds, execute_request
+from gsc.auth import execute_request
 
 today = datetime.datetime.now()
 days = relativedelta.relativedelta(days=3)

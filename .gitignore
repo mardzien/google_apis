@@ -1,7 +1,8 @@
 venv
 .idea
-gsc/key
-gsc/authorizedcreds.dat
+key
+key/authorizedcreds.dat
+ga/analyticsreporting.dat
 gsc/Output
 trends/Input
 trends/Output
