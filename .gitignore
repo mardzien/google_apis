@@ -4,5 +4,6 @@ key
 key/authorizedcreds.dat
 ga/analyticsreporting.dat
 gsc/Output
+ga/Output
 trends/Input
 trends/Output
