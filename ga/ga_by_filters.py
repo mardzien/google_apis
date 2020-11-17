@@ -1,21 +1,42 @@
 import pandas as pd
+import json
+
 from ga.auth import initialize_analyticsreporting
 
 
 DIMS = ['ga:pagePath']
 METRI = ['ga:sessions', 'ga:users', 'ga:pageViews']
+FILTER = ['/ru/tipstricks-ru/', '/ru/trendy-ru/', '/тренди/', '/поради-та-рекомендації/']
 
 
-def get_response(webmaster_service,  VIEW_ID, start_date, end_date, dimensions, metrics):
-    return webmaster_service.reports().batchGet(
-        body={
-            'reportRequests': [{
-                'viewId': VIEW_ID,
-                'dateRanges': [{'startDate': start_date, 'endDate': end_date}],
-                'metrics': [{'expression': exp} for exp in metrics],
-                'dimensions': [{'name': name} for name in dimensions],
-            }]
-        }).execute()
+def get_response(webmaster_service,  VIEW_ID, start_date, end_date, dimensions, metrics, filters):
+    requests_list = [
+        {
+            'viewId': VIEW_ID,
+            'dateRanges': [{'startDate': start_date, 'endDate': end_date}],
+            'metrics': [{'expression': exp} for exp in metrics],
+            'dimensions': [{'name': name} for name in dimensions],
+            "dimensionFilterClauses": [
+                {
+                    "operator": "OR",
+                    "filters": [
+                        {
+                            "dimensionName": "ga:pagePath",
+                            "operator": "REGEXP",
+                            "expressions": [
+                                filter for filter in filters
+                            ],
+                        },
+                    ]
+                }
+            ]
+        }
+    ]
+    return webmaster_service.reports().batchGet(body=
+                                                {
+                                                    'reportRequests': requests_list
+                                                }
+                                                ).execute()
 
 
 def get_report(response, dimensions, metrics):
@@ -63,7 +84,7 @@ def print_response(response):
 
 def main():
     analytics = initialize_analyticsreporting()
-    response = get_response(analytics, '168176938', '2020-10-12', '2020-10-12', DIMS, METRI)
+    response = get_response(analytics, '168176938', '2020-10-12', '2020-10-12', DIMS, METRI, FILTER)
     df = get_report(response, DIMS, METRI)
     df.to_excel("Output/asd.xlsx")
 
