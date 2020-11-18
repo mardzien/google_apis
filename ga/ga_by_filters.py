@@ -97,7 +97,7 @@ def print_response(response):
 
 def main():
     analytics = initialize_analyticsreporting()
-    response = get_response(analytics, '168176938', '2020-01-01', '2020-10-30', DIMS, METRI, FILTER)
+    response = get_response(analytics, '168176938', '2020-01-01', '2020-01-31', DIMS, METRI, FILTER)
     df = get_report(response, DIMS, METRI)
     df.to_csv("Output/asd_organic.csv")
 
