@@ -4,9 +4,17 @@ import json
 from ga.auth import initialize_analyticsreporting
 
 
-DIMS = ['ga:pagePath']
+# DIMS = ['ga:date', 'ga:month', 'ga:pagePath']
+DIMS = ['ga:segment', 'ga:date']
 METRI = ['ga:sessions', 'ga:users', 'ga:pageViews']
 FILTER = ['/ru/tipstricks-ru/', '/ru/trendy-ru/', '/тренди/', '/поради-та-рекомендації/']
+
+
+def filter_regex_generator(filters):
+    result = ""
+    for filter in filters:
+        result += f"{filter}|"
+    return result[:-1]
 
 
 def get_response(webmaster_service,  VIEW_ID, start_date, end_date, dimensions, metrics, filters):
@@ -16,6 +24,11 @@ def get_response(webmaster_service,  VIEW_ID, start_date, end_date, dimensions, 
             'dateRanges': [{'startDate': start_date, 'endDate': end_date}],
             'metrics': [{'expression': exp} for exp in metrics],
             'dimensions': [{'name': name} for name in dimensions],
+            'samplingLevel': 'LARGE',
+            'segments': [
+                {
+                  'segmentId': 'gaid::-5'  # organic traffic
+                }],
             "dimensionFilterClauses": [
                 {
                     "operator": "OR",
@@ -24,7 +37,7 @@ def get_response(webmaster_service,  VIEW_ID, start_date, end_date, dimensions, 
                             "dimensionName": "ga:pagePath",
                             "operator": "REGEXP",
                             "expressions": [
-                                filter for filter in filters
+                                filter_regex_generator(filters)
                             ],
                         },
                     ]
@@ -84,9 +97,9 @@ def print_response(response):
 
 def main():
     analytics = initialize_analyticsreporting()
-    response = get_response(analytics, '168176938', '2020-10-12', '2020-10-12', DIMS, METRI, FILTER)
+    response = get_response(analytics, '168176938', '2020-01-01', '2020-10-30', DIMS, METRI, FILTER)
     df = get_report(response, DIMS, METRI)
-    df.to_excel("Output/asd.xlsx")
+    df.to_csv("Output/asd_organic.csv")
 
 
 if __name__ == '__main__':
